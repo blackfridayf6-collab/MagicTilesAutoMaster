@@ -1,39 +1,16 @@
 
-name: Build Magic Tiles Auto Master
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
       - name: Extract Android project
         run: |
           unzip -o MagicTilesAutoMaster-source.zip -d /tmp/source
           cp -R /tmp/source/MagicTilesAutoMaster/. .
 
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+          mkdir -p app/src/main/res/values
 
-      - uses: android-actions/setup-android@v4
+          cat > app/src/main/res/values/strings.xml <<'EOF'
+          <resources>
+              <string name="accessibility_service_description">Permite ao Auto Master tocar nas faixas do jogo.</string>
+          </resources>
+          EOF
 
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
-
-      - name: Build APK
-        run: gradle assembleDebug
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: MagicTilesAutoMaster-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          sed -i 's|android:description="Permite ao Auto Master tocar nas faixas do jogo."|android:description="@string/accessibility_service_description"|' app/src/main/res/xml/accessibility_service_config.xml
           
