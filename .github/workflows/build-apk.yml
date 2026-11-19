@@ -1,12 +1,10 @@
+
 name: Build Magic Tiles Auto Master
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
-
-permissions:
-  contents: write
 
 jobs:
   build:
@@ -19,12 +17,6 @@ jobs:
         run: |
           unzip -o MagicTilesAutoMaster-source.zip -d /tmp/source
           cp -R /tmp/source/MagicTilesAutoMaster/. .
-          rm MagicTilesAutoMaster-source.zip
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Extract Android source" || true
-          git push
 
       - uses: actions/setup-java@v4
         with:
@@ -44,3 +36,4 @@ jobs:
         with:
           name: MagicTilesAutoMaster-APK
           path: app/build/outputs/apk/debug/app-debug.apk
+          
